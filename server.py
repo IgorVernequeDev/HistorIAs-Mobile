@@ -1,12 +1,17 @@
 from flask import Flask, request, jsonify
 import google.generativeai as genai
 import os
+from dotenv import load_dotenv
 
 app = Flask(__name__)
 
-genai.configure(api_key=os.getenv("GEMINI_API_KEY", "AIzaSyC3zTzZhfzEk-ft0PcC7ZPZle1nJLRkU7Y"))
+load_dotenv()
 
-model = genai.GenerativeModel("gemini-2.5-flash")
+api_key = os.getenv("GOOGLE_API_KEY")
+
+genai.configure(api_key=os.getenv("api_key"))
+
+model = genai.GenerativeModel("gemini-2.5-flash-lite")
 
 @app.route("/story", methods=["POST"])
 def story():
@@ -31,28 +36,13 @@ def story():
             Gênero: {data.get("genre")}
             Detalhes: {data.get("details")}
             Incluir falas na história? {"Sim" if data.get("isChecked") else "Não"}
-
-            ESCREVA APENAS A HISTÓRIA EM HTML.
-            - Use <h2> para o título.
-            - Use <p class="narracao"> para blocos de narração.
-            - Use <p class="personagem-X"> para falas, onde X é um número único para cada personagem (comece em 1).
-            - Use <ul>/<li> para listar personagens e detalhes adicionais.
-            - Use estilos inline ou classes, mas **não dependa de nomes de personagens fixos**.
-            - Diferencie cores e tamanhos entre narração e falas.
-            - Faça uma distinção clara entre personagens usando estilos, não nomes.
-            - Use <strong> e <em> para destaques.
-            - Certifique-se de que o HTML seja legível, bonito e aplicável para qualquer quantidade de personagens.
-            - Não repita os detalhes/informações da história na resposta (EX: Gênero: Romance Personagens: Igor...), apenas escreva a história em si.
-            - TIRE OS ```html do começo e fim.
+            
+            Apenas escreva a história, sem usar '###' para os capítulos.
             """
 
-        temperature = float(data.get("temperature", 1))
-        
         response = model.generate_content(
             prompt,
-            generation_config=genai.types.GenerationConfig(
-                temperature=temperature
-            )
+            generation_config=genai.types.GenerationConfig(temperature=1)
         )
 
         if response and response.parts:
