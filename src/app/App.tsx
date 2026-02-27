@@ -25,7 +25,7 @@ export default function App() {
     removeCharacter,
     addCharacter,
     story,
-    saveStory
+    scrollRef,
   } = useStoryFunctions()
 
   if (!loaded) return null
@@ -41,7 +41,7 @@ export default function App() {
         style={{ flex: 1 }}
         behavior={Platform.OS === "ios" ? "padding" : "height"}
       >
-        <ScrollView contentContainerStyle={{ flexGrow: 1 }}>
+        <ScrollView ref={scrollRef} contentContainerStyle={{ flexGrow: 1 }}>
 
           <View style={styles.header}>
             <View style={{ width: '25%' }}>
@@ -105,10 +105,9 @@ export default function App() {
                 />
               </View>
 
-              <View style={{ flexDirection: 'row', alignItems: 'center', marginVertical: 15, gap: 5 }}>
+              <View style={{ flexDirection: 'row', alignItems: 'center', gap: 10, marginBottom: 10 }}>
                 <Text style={styles.label}>Incluir falas na história?</Text>
                 <Checkbox
-                  style={styles.checkbox}
                   value={isChecked}
                   onValueChange={setChecked}
                   color={isChecked ? 'black' : 'gray'}
@@ -125,39 +124,52 @@ export default function App() {
 
               {characters.map((character, index) => (
                 <View key={index}>
-                  <Text style={styles.subtitle}>
-                    Personagem {index + 1}:
-                  </Text>
 
-                  <View style={{ display: 'flex', flexDirection: 'row' }}>
-                    <View style={{ display: 'flex', flexDirection: 'column', width: '90%' }}>
-                      <TextInput
-                        style={styles.input}
-                        placeholder="Nome do personagem..."
-                        value={character.name}
-                        onChangeText={(text) => {
-                          const newCharacters = [...characters]
-                          newCharacters[index].name = text
-                          setCharacters(newCharacters)
-                        }}
-                      />
-                      <TextInput
-                        style={styles.input}
-                        placeholder="Personalidade..."
-                        value={character.personality}
-                        onChangeText={(text) => {
-                          const newCharacters = [...characters]
-                          newCharacters[index].personality = text
-                          setCharacters(newCharacters)
-                        }}
-                      />
-                    </View>
+                  <View style={{ flexDirection: 'row', justifyContent: 'space-between', marginVertical: 5 }}>
+                    <Text style={styles.subtitle}>Personagem {index + 1}:</Text>
 
-                    <View style={{ display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center', width: '15%' }}>
+                    <View style={{ flexDirection: 'row', justifyContent: 'flex-end', alignItems: 'center' }}>
                       <TouchableOpacity onPress={() => removeCharacter(index)}>
                         <Image source={require('../../assets/img/trash.png')} style={{ width: 25, height: 25 }} />
                       </TouchableOpacity>
                     </View>
+
+                  </View>
+
+                  <View style={{ flexDirection: 'row' }}>
+                    <View style={{ flexDirection: 'column' }}>
+
+                      <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', gap: 5 }}>
+                        <Text>Personagem:</Text>
+                        <TextInput
+                          style={{ borderWidth: 1, borderColor: 'gray', borderRadius: 5, padding: 10, width: '70%' }}
+                          placeholder="Nome do personagem..."
+                          value={character.name}
+                          onChangeText={(text) => {
+                            const newCharacters = [...characters]
+                            newCharacters[index].name = text
+                            setCharacters(newCharacters)
+                          }}
+                        />
+                      </View>
+
+                      <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', gap: 5, marginVertical: 5 }}>
+                        <Text>Personalidade:</Text>
+                        <TextInput
+                          style={{ borderWidth: 1, borderColor: 'gray', borderRadius: 5, padding: 10, width: '70%' }}
+                          placeholder="Personalidade..."
+                          value={character.personality}
+                          onChangeText={(text) => {
+                            const newCharacters = [...characters]
+                            newCharacters[index].personality = text
+                            setCharacters(newCharacters)
+                          }}
+                        />
+                      </View>
+
+                    </View>
+
+
 
                   </View>
                 </View>
@@ -180,7 +192,7 @@ export default function App() {
             <View>
               <ActivityIndicator size={70} color="#ffffff" />
               <View style={styles.center}>
-                <View style={{ padding: 10, backgroundColor: 'white', borderRadius: 5, alignItems: 'center', marginTop: 10 }}>
+                <View style={{ padding: 10, backgroundColor: 'white', borderRadius: 5, alignItems: 'center' }}>
                   <Text>Gerando História...</Text>
                 </View>
               </View>
@@ -192,13 +204,9 @@ export default function App() {
               {storyResult !== "" && (
                 <View style={styles.story}>
 
-                  <View style={{ width: '100%', display: 'flex', justifyContent: 'space-around', flexDirection: 'row', marginBottom: 10 }}>
+                  <View style={{ width: '100%', justifyContent: 'space-around', flexDirection: 'row' }}>
 
                     <View style={{ flexDirection: 'row', width: '50%', alignItems: 'center', gap: 5 }}>
-                      <Text>Habilitar voz:</Text>
-                      <TouchableOpacity style={{ backgroundColor: 'black', padding: 5, borderRadius: 5, alignItems: 'center' }}>
-                        <Text style={styles.buttonText}>Iniciar</Text>
-                      </TouchableOpacity>
                     </View>
 
                     <View style={{ flexDirection: 'row', width: '50%', justifyContent: 'flex-end', gap: 10, alignItems: 'center' }}>
@@ -216,7 +224,7 @@ export default function App() {
 
                   </View>
 
-                  <Text style={{ fontSize: historyFontSize, fontFamily: historyFontFamily }}>{storyResult}</Text>
+                  <Text style={{ fontSize: historyFontSize, fontFamily: historyFontFamily, marginTop: 10 }}>{storyResult}</Text>
 
                 </View>
               )}
@@ -225,7 +233,7 @@ export default function App() {
 
           {visible && storyResult !== "" && (
             <View style={styles.center}>
-              <TouchableOpacity style={styles.button} onPress={saveStory}>
+              <TouchableOpacity style={styles.button}>
                 <Text style={styles.buttonText}>Salvar História</Text>
               </TouchableOpacity>
             </View>

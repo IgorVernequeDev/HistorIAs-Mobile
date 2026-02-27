@@ -1,6 +1,6 @@
-import { useState } from 'react'
+import { useState, useRef } from 'react'
 import { useFonts } from 'expo-font'
-import * as FileSystem from 'expo-file-system'
+import { ScrollView } from 'react-native'
 
 export const useStoryFunctions = () => {
     const [genre, setGenre] = useState("")
@@ -13,8 +13,9 @@ export const useStoryFunctions = () => {
     const [errorMessage, setErrorMessage] = useState("")
     const [visible, setVisible] = useState(true)
     const [loading, setLoading] = useState(false)
-    const [historyFontSize, setHistoryFontSize] = useState(16)
+    const [historyFontSize, setHistoryFontSize] = useState(18)
     const [historyFontFamily, setHistoryFontFamily] = useState("")
+    const scrollRef = useRef<ScrollView>(null);
 
     const [loaded] = useFonts({
         MedievalSharp: require('../../assets/fonts/MedievalSharp-Book.ttf'),
@@ -63,6 +64,7 @@ export const useStoryFunctions = () => {
 
     function addCharacter(index: number) {
         if (characters.length >= 5) {
+            scrollRef.current?.scrollTo({ y: 0, animated: true })
             setErrorMessage("O número máximo de personagens é 5.")
             return
         }
@@ -70,12 +72,14 @@ export const useStoryFunctions = () => {
     }
 
     const story = async () => {
+        scrollRef.current?.scrollToEnd({ animated: true })
         const algumPersonagemInvalido = characters.some(
             (char) => char.name.trim() === "" || char.personality.trim() === ""
         )
 
         if (genre == '' || genre == null || duration == '' || duration == null || algumPersonagemInvalido) {
             setVisible(true)
+            scrollRef.current?.scrollTo({ y: 0, animated: true })
             setErrorMessage('Os campos gênero, duração e personagens devem ser preenchidos antes de criar a história!')
         }
         else {
@@ -135,40 +139,6 @@ export const useStoryFunctions = () => {
         }
     }
 
-    const saveStory = async () => {
-        if (!storyResult) {
-            setErrorMessage("Nenhuma história para salvar.")
-            return
-        }
-
-        try {
-            const permissions =
-                await FileSystem.StorageAccessFramework.requestDirectoryPermissionsAsync()
-
-            if (!permissions.granted) {
-                alert("Permissão negada.")
-                return
-            }
-
-            const uri = await FileSystem.StorageAccessFramework.createFileAsync(
-                permissions.directoryUri,
-                `historia-${Date.now()}.txt`,
-                "text/plain"
-            )
-
-            await FileSystem.StorageAccessFramework.writeAsStringAsync(
-                uri,
-                storyResult
-            )
-
-            alert("História salva com sucesso!")
-
-        } catch (error) {
-            console.error(error)
-            setErrorMessage("Erro ao salvar a história.")
-        }
-    }
-
     return {
         genre, setGenre,
         details, setDetails,
@@ -185,9 +155,9 @@ export const useStoryFunctions = () => {
         changeFontSize,
         loaded,
         story,
-        saveStory,
         removeCharacter,
         changeBackground,
-        addCharacter
+        addCharacter,
+        scrollRef
     }
 }

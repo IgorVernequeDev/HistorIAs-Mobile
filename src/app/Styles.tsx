@@ -71,9 +71,6 @@ export const styles = StyleSheet.create({
         color: 'white',
         fontWeight: 'bold'
     },
-    checkbox: {
-        marginLeft: 10
-    },
     error: {
         display: 'flex',
         justifyContent: 'center',
@@ -102,12 +99,10 @@ export const styles = StyleSheet.create({
 export const pickerSelectStyles = StyleSheet.create({
     inputIOS: {
         width: 250,
-        fontSize: 16,
         color: 'black'
     },
     inputAndroid: {
         width: 250,
-        fontSize: 16,
-        color: 'black'
+        color: 'black',
     },
 });

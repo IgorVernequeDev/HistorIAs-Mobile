@@ -22,7 +22,8 @@
       "package": "com.anonymous.HistorIAs"
     },
     "plugins": [
-      "expo-font"
+      "expo-font",
+      "expo-audio"
     ],
     "extra": {
       "eas": {
