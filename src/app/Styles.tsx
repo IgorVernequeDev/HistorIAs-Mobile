@@ -61,7 +61,7 @@ export const styles = StyleSheet.create({
 
     button: {
         backgroundColor: 'black',
-        padding: 15,
+        padding: 12,
         borderRadius: 5,
         alignItems: 'center',
         marginTop: 10

@@ -16,6 +16,7 @@ export const useStoryFunctions = () => {
     const [historyFontSize, setHistoryFontSize] = useState(18)
     const [historyFontFamily, setHistoryFontFamily] = useState("")
     const scrollRef = useRef<ScrollView>(null);
+    const [index, setIndex] = useState(0)
 
     const [loaded] = useFonts({
         MedievalSharp: require('../../assets/fonts/MedievalSharp-Book.ttf'),
@@ -34,6 +35,26 @@ export const useStoryFunctions = () => {
         } else {
             setHistoryFontSize(prev => Math.max(prev - 1, 12))
         }
+    }
+
+    const changeFont = (action: string) => {
+        const fonts = ['Caveat', 'MedialSharp', 'KodeMono', 'NothingYouCouldDo', 'SpecialElite', 'Determination', 'PlayFair', 'ComicSans']
+        let newIndex = index
+
+        if (action === 'previous') {
+            newIndex = index - 1
+            if (newIndex < 0) {
+                newIndex = fonts.length - 1
+            }
+        } else {
+            newIndex = index + 1
+            if (newIndex >= fonts.length) {
+                newIndex = 0
+            }
+        }
+
+        setIndex(newIndex)
+        setHistoryFontFamily(fonts[newIndex])
     }
 
     const changeBackground = (selectedGenre: string) => {
@@ -158,6 +179,7 @@ export const useStoryFunctions = () => {
         removeCharacter,
         changeBackground,
         addCharacter,
-        scrollRef
+        scrollRef,
+        changeFont
     }
 }

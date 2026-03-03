@@ -26,6 +26,7 @@ export default function App() {
     addCharacter,
     story,
     scrollRef,
+    changeFont
   } = useStoryFunctions()
 
   if (!loaded) return null
@@ -206,40 +207,45 @@ export default function App() {
 
                   <View style={{ width: '100%', justifyContent: 'space-around', flexDirection: 'row' }}>
 
-                    <View style={{ flexDirection: 'row', width: '50%', alignItems: 'center', gap: 5 }}>
+                    <View style={{ flexDirection: 'row', width: '50%', gap: 10, alignItems: 'center' }}>
+                      <Text>Mudar fonte:</Text>
+                      <TouchableOpacity style={styles.fontButton} onPress={() => changeFont('previous')}>
+                        <Text style={styles.buttonText}>←</Text>
+                      </TouchableOpacity>
+                      <TouchableOpacity style={styles.fontButton} onPress={() => changeFont('next')}>
+                        <Text style={styles.buttonText}>→</Text>
+                      </TouchableOpacity>
                     </View>
 
-                    <View style={{ flexDirection: 'row', width: '50%', justifyContent: 'flex-end', gap: 10, alignItems: 'center' }}>
-                      <Text>Tamanho da fonte:</Text>
+                      <View style={{ flexDirection: 'row', width: '50%', justifyContent: 'flex-end', gap: 10, alignItems: 'center' }}>
+                        <Text>Tamanho da fonte:</Text>
 
-                      <TouchableOpacity style={styles.fontButton} onPress={() => changeFontSize('increase')}>
-                        <Text style={styles.buttonText}>+</Text>
-                      </TouchableOpacity>
+                        <TouchableOpacity style={styles.fontButton} onPress={() => changeFontSize('increase')}>
+                          <Text style={styles.buttonText}>+</Text>
+                        </TouchableOpacity>
+                        <TouchableOpacity style={styles.fontButton} onPress={() => changeFontSize('decrease')}>
+                          <Text style={styles.buttonText}>-</Text>
+                        </TouchableOpacity>
 
-                      <TouchableOpacity style={styles.fontButton} onPress={() => changeFontSize('decrease')}>
-                        <Text style={styles.buttonText}>-</Text>
-                      </TouchableOpacity>
-
+                      </View>
                     </View>
+
+                    <Text style={{ fontSize: historyFontSize, fontFamily: historyFontFamily, marginTop: 10 }}>{storyResult}</Text>
 
                   </View>
-
-                  <Text style={{ fontSize: historyFontSize, fontFamily: historyFontFamily, marginTop: 10 }}>{storyResult}</Text>
-
+              )}
                 </View>
               )}
-            </View>
-          )}
 
-          {visible && storyResult !== "" && (
-            <View style={styles.center}>
-              <TouchableOpacity style={styles.button}>
-                <Text style={styles.buttonText}>Salvar História</Text>
-              </TouchableOpacity>
-            </View>
-          )}
+              {visible && storyResult !== "" && (
+                <View style={styles.center}>
+                  <TouchableOpacity style={styles.button}>
+                    <Text style={styles.buttonText}>Salvar História</Text>
+                  </TouchableOpacity>
+                </View>
+              )}
 
-        </ScrollView>
+            </ScrollView>
       </KeyboardAvoidingView>
     </ImageBackground>
   )
