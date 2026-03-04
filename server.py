@@ -42,7 +42,7 @@ def story():
 
         response = model.generate_content(
             prompt,
-            generation_config=genai.types.GenerationConfig(temperature=1)
+            generation_config=genai.types.GenerationConfig(temperature=0.7)
         )
 
         if response and response.parts:
