@@ -2,7 +2,7 @@
   "expo": {
     "name": "HistorIAs",
     "slug": "HistorIAs",
-    "icon": "./assets/img/favicon.ico",
+    "icon": "./assets/img/icon.png",
     "version": "1.0.0",
     "orientation": "portrait",
     "userInterfaceStyle": "light",

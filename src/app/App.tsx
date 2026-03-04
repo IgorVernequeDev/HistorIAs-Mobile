@@ -9,11 +9,13 @@ export default function App() {
   const {
     genre, setGenre,
     details, setDetails,
+    additionalDetails, setAdditionalDetails,
     characters, setCharacters,
     duration, setDuration,
     storyResult,
     backgroundImage,
-    isChecked, setChecked,
+    includeDialogues, setIncludeDialogues,
+    dialogueCount, setDialogueCount,
     errorMessage,
     visible,
     loading,
@@ -26,7 +28,8 @@ export default function App() {
     addCharacter,
     story,
     scrollRef,
-    changeFont
+    changeFont,
+    saveStory
   } = useStoryFunctions()
 
   if (!loaded) return null
@@ -46,7 +49,7 @@ export default function App() {
 
           <View style={styles.header}>
             <View style={{ width: '25%' }}>
-              <Image source={require('../../assets/img/logo.png')} style={{ width: 50, height: 50 }} />
+              <Image source={require('../../assets/img/logo.png')} style={{ width: 40, height: 40 }} />
             </View>
             <View style={{ width: '50%', justifyContent: 'center', alignItems: 'center' }}>
               <Text style={{ color: 'white', fontFamily: 'MedievalSharp', fontSize: 24 }}>
@@ -97,9 +100,11 @@ export default function App() {
                     setDuration(value)
                   }}
                   items={[
-                    { label: 'Curta', value: 'Curta' },
-                    { label: 'Média', value: 'Média' },
-                    { label: 'Longa', value: 'Longa' }
+                    { label: 'Muito curta', value: 'muito curta' },
+                    { label: 'Curta', value: 'curta' },
+                    { label: 'Média', value: 'médio' },
+                    { label: 'Longa', value: 'longa' },
+                    { label: 'Muito longa', value: 'muito longa' }
                   ]}
                   placeholder={{ label: 'Duração da história...', value: null }}
                   style={pickerSelectStyles}
@@ -109,19 +114,30 @@ export default function App() {
               <View style={{ flexDirection: 'row', alignItems: 'center', gap: 10, marginBottom: 10 }}>
                 <Text style={styles.label}>Incluir falas na história?</Text>
                 <Checkbox
-                  value={isChecked}
-                  onValueChange={setChecked}
-                  color={isChecked ? 'black' : 'gray'}
+                  style={{ width: 22, height: 22 }}
+                  value={includeDialogues}
+                  onValueChange={setIncludeDialogues}
+                  color={includeDialogues ? 'black' : 'gray'}
                 />
-              </View>
+              </View>,
 
-              <Text style={styles.subtitle}>Informações adicionais:</Text>
-              <TextInput
-                style={styles.input}
-                placeholder="Detalhes adicionais..."
-                value={details}
-                onChangeText={setDetails}
-              />
+              {includeDialogues == true && (
+                <View style={{ flexDirection: 'row', alignItems: 'center', gap: 10 }}>
+                  <Text style={styles.label}>Quantia de falas:</Text>
+                  <RNPickerSelect
+                    onValueChange={(value) => {
+                      setDialogueCount(value)
+                    }}
+                    items={[
+                      { label: 'Poucas', value: 'Poucas' },
+                      { label: 'Médio', value: 'Médio' },
+                      { label: 'Muitas', value: 'Muitas' }
+                    ]}
+                    placeholder={{ label: 'Quantia de falas...', value: null }}
+                    style={pickerSelectStyles}
+                  />
+                </View>
+              )}
 
               {characters.map((character, index) => (
                 <View key={index}>
@@ -167,14 +183,32 @@ export default function App() {
                           }}
                         />
                       </View>
-
                     </View>
-
-
-
                   </View>
                 </View>
               ))}
+
+              <View style={{ flexDirection: 'row', alignItems: 'center', gap: 10, marginVertical: 10 }}>
+                <Text style={styles.label}>Adicionar informações adicionais?</Text>
+                <Checkbox
+                  style={{ width: 22, height: 22 }}
+                  value={additionalDetails}
+                  onValueChange={setAdditionalDetails}
+                  color={additionalDetails ? 'black' : 'gray'}
+                />
+              </View>
+
+              {additionalDetails == true && (
+                <View>
+                  <Text style={styles.subtitle}>Informações adicionais:</Text>
+                  <TextInput
+                    style={styles.input}
+                    placeholder="Informações adicionais..."
+                    value={details}
+                    onChangeText={setDetails}
+                  />
+                </View>
+              )}
 
               <View style={{ flexDirection: 'row', justifyContent: 'space-between', gap: 10 }}>
                 <TouchableOpacity style={styles.button} onPress={() => addCharacter(characters.length)}>
@@ -217,35 +251,35 @@ export default function App() {
                       </TouchableOpacity>
                     </View>
 
-                      <View style={{ flexDirection: 'row', width: '50%', justifyContent: 'flex-end', gap: 10, alignItems: 'center' }}>
-                        <Text>Tamanho da fonte:</Text>
+                    <View style={{ flexDirection: 'row', width: '50%', justifyContent: 'flex-end', gap: 10, alignItems: 'center' }}>
+                      <Text>Tamanho da fonte:</Text>
 
-                        <TouchableOpacity style={styles.fontButton} onPress={() => changeFontSize('increase')}>
-                          <Text style={styles.buttonText}>+</Text>
-                        </TouchableOpacity>
-                        <TouchableOpacity style={styles.fontButton} onPress={() => changeFontSize('decrease')}>
-                          <Text style={styles.buttonText}>-</Text>
-                        </TouchableOpacity>
+                      <TouchableOpacity style={styles.fontButton} onPress={() => changeFontSize('increase')}>
+                        <Text style={styles.buttonText}>+</Text>
+                      </TouchableOpacity>
+                      <TouchableOpacity style={styles.fontButton} onPress={() => changeFontSize('decrease')}>
+                        <Text style={styles.buttonText}>-</Text>
+                      </TouchableOpacity>
 
-                      </View>
                     </View>
-
-                    <Text style={{ fontSize: historyFontSize, fontFamily: historyFontFamily, marginTop: 10 }}>{storyResult}</Text>
-
                   </View>
-              )}
+
+                  <Text style={{ fontSize: historyFontSize, fontFamily: historyFontFamily, marginTop: 10 }}>{storyResult}</Text>
+
                 </View>
               )}
+            </View>
+          )}
 
-              {visible && storyResult !== "" && (
-                <View style={styles.center}>
-                  <TouchableOpacity style={styles.button}>
-                    <Text style={styles.buttonText}>Salvar História</Text>
-                  </TouchableOpacity>
-                </View>
-              )}
+          {loading == false && storyResult !== "" && (
+            <View style={styles.center}>
+              <TouchableOpacity style={styles.button} onPress={saveStory}>
+                <Text style={styles.buttonText}>⬇️ Salvar História</Text>
+              </TouchableOpacity>
+            </View>
+          )}
 
-            </ScrollView>
+        </ScrollView>
       </KeyboardAvoidingView>
     </ImageBackground>
   )

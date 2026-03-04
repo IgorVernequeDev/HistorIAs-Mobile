@@ -15,7 +15,6 @@ model = genai.GenerativeModel("gemini-2.5-flash-lite")
 
 @app.route("/story", methods=["POST"])
 def story():
-    print("Generating Story...")
     try:
         data = request.get_json()
         
@@ -30,12 +29,13 @@ def story():
         """
 
         prompt = f"""
-            Crie uma história {data.get("duration")} com base nas seguintes informações:
+            Crie uma história de tamanho {data.get("duration")} com base nas seguintes informações:
             Personagens e suas personalidades: 
             {formatted_characters}
             Gênero: {data.get("genre")}
-            Detalhes: {data.get("details")}
-            Incluir falas na história? {"Sim" if data.get("isChecked") else "Não"}
+            Incluir falas na história? {"Sim" if data.get("includeDialogues") else "Não"}
+            {"Quantia de falas:" f" {data.get("dialogueCount")}" if data.get("includeDialogues") else ""}
+            {"Informações adicionais:" f" {data.get("details")}" if data.get("details") else ""}
             
             Apenas escreva a história, sem usar '###' para os capítulos.
             """
@@ -56,6 +56,10 @@ def story():
     except Exception as e:
         print("ERROR:", e)
         return jsonify({"error": str(e)}), 502
+    
+@app.route("/ping")
+def ping():
+    return {"status": "ok"}
     
 if __name__ == "__main__":
     app.run(debug=False, port=5000, host="0.0.0.0")

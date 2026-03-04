@@ -1,15 +1,18 @@
 import { useState, useRef } from 'react'
 import { useFonts } from 'expo-font'
 import { ScrollView } from 'react-native'
+import * as Print from 'expo-print';
+import * as Sharing from 'expo-sharing';
 
 export const useStoryFunctions = () => {
     const [genre, setGenre] = useState("")
     const [details, setDetails] = useState("")
+    const [additionalDetails, setAdditionalDetails] = useState(false)
     const [characters, setCharacters] = useState([{ name: "", personality: "" }])
     const [duration, setDuration] = useState("")
     const [storyResult, setStoryResult] = useState("")
     const [backgroundImage, setBackgroundImage] = useState(require('../../assets/img/livros.png'))
-    const [isChecked, setChecked] = useState(false)
+    const [includeDialogues, setIncludeDialogues] = useState(false)
     const [errorMessage, setErrorMessage] = useState("")
     const [visible, setVisible] = useState(true)
     const [loading, setLoading] = useState(false)
@@ -17,6 +20,7 @@ export const useStoryFunctions = () => {
     const [historyFontFamily, setHistoryFontFamily] = useState("")
     const scrollRef = useRef<ScrollView>(null);
     const [index, setIndex] = useState(0)
+    const [dialogueCount, setDialogueCount] = useState("")
 
     const [loaded] = useFonts({
         MedievalSharp: require('../../assets/fonts/MedievalSharp-Book.ttf'),
@@ -84,9 +88,9 @@ export const useStoryFunctions = () => {
     }
 
     function addCharacter(index: number) {
-        if (characters.length >= 5) {
+        if (characters.length >= 10) {
             scrollRef.current?.scrollTo({ y: 0, animated: true })
-            setErrorMessage("O número máximo de personagens é 5.")
+            setErrorMessage("O número máximo de personagens é 10.")
             return
         }
         setCharacters([...characters, { name: "", personality: "" }])
@@ -115,9 +119,11 @@ export const useStoryFunctions = () => {
                     body: JSON.stringify({
                         genre,
                         details,
+                        additionalDetails,
                         characters,
                         duration,
-                        isChecked
+                        includeDialogues,
+                        dialogueCount
                     }),
                 })
 
@@ -160,14 +166,62 @@ export const useStoryFunctions = () => {
         }
     }
 
+    const saveStory = async () => {
+        try {
+            if (!storyResult || storyResult.trim() === "") {
+                setErrorMessage("Não há história para salvar.")
+                return
+            }
+            console.log(historyFontFamily)
+            console.log(historyFontSize)
+
+            const html = `
+        <html>
+            <head>
+                <meta charset="utf-8" />
+                <link href="https://fonts.googleapis.com/css2?family=Caveat:wght@400;700&display=swap" rel="stylesheet">
+                <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&display=swap" rel="stylesheet">
+                <link href="https://fonts.googleapis.com/css2?family=Special+Elite&display=swap" rel="stylesheet">
+                <link href="https://fonts.googleapis.com/css2?family=Nothing+You+Could+Do&display=swap" rel="stylesheet">
+                <link href="https://fonts.googleapis.com/css2?family=MedievalSharp&display=swap" rel="stylesheet">
+                <link href="https://fonts.googleapis.com/css2?family=Kode+Mono:wght@400;700&display=swap" rel="stylesheet">
+                <style>
+                    body {
+                        font-family: '${historyFontFamily}', cursive;
+                        font-size: ${historyFontSize}px;
+                    }
+                </style>
+            </head>
+            <body>
+                ${storyResult}
+            </body>
+        </html>
+        `
+
+            const { uri } = await Print.printToFileAsync({
+                html,
+            })
+
+            await Sharing.shareAsync(uri)
+
+            return uri
+
+        } catch (error) {
+            console.error("Erro ao gerar PDF:", error)
+            setErrorMessage("Erro ao gerar PDF.")
+        }
+    }
+
     return {
         genre, setGenre,
         details, setDetails,
+        additionalDetails, setAdditionalDetails,
         characters, setCharacters,
         duration, setDuration,
         storyResult, setStoryResult,
         backgroundImage, setBackgroundImage,
-        isChecked, setChecked,
+        includeDialogues, setIncludeDialogues,
+        dialogueCount, setDialogueCount,
         errorMessage, setErrorMessage,
         visible, setVisible,
         loading, setLoading,
@@ -180,6 +234,7 @@ export const useStoryFunctions = () => {
         changeBackground,
         addCharacter,
         scrollRef,
-        changeFont
+        changeFont,
+        saveStory
     }
 }
