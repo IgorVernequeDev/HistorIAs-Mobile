@@ -1,0 +1,52 @@
+{
+  "customize_story": "Personalize sua história",
+  "genre": "Gênero",
+  "duration": "Duração",
+  "include_dialogues": "Incluir falas na história?",
+  "dialogue_amount": "Quantia de falas",
+  "add_additional_info": "Adicionar informações adicionais?",
+  "additional_info": "Informações adicionais...",
+  "add_character": "Adicionar Personagem",
+  "generate_story": "Gerar História",
+
+  "name": "Nome",
+  "personality": "Personalidade",
+  "character": "Personagem",
+
+  "select_genre": "Selecione um gênero...",
+  "select_duration": "Duração da história...",
+  "select_dialogues": "Quantia de falas...",
+  "select_name": "Nome do personagem...",
+  "select_personality": "Personalidade do personagem...",
+  "select_amount_dialogue": "Quantia...",
+
+  "very_short": "Muito curta",
+  "short": "Curta",
+  "medium": "Média",
+  "long": "Longa",
+  "very_long": "Muito longa",
+
+  "few": "Poucas",
+  "many": "Muitas",
+
+  "romance": "Romance",
+  "science_fiction": "Ficção Científica",
+  "fantasy": "Fantasia",
+  "mystery": "Mistério",
+  "horror": "Terror",
+  "adventure": "Aventura",
+  "comedy": "Comédia",
+  "drama": "Drama",
+
+  "change_font": "Mudar fonte:",
+  "font_previous": "←",
+  "font_next": "→",
+  "size": "Tamanho:",
+  "increase": "+",
+  "decrease": "-",
+  "generating_story": "Gerando História...",
+  "save_story": "⬇️ Salvar História",
+  "max_characters": "O número máximo de personagens é 10.",
+  "min_characters": "A história deve conter pelo menos um personagem.",
+  "no_story": "Não há história para salvar."
+}

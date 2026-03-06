@@ -3,6 +3,8 @@ import { useFonts } from 'expo-font'
 import { ScrollView } from 'react-native'
 import * as Print from 'expo-print'
 import * as Sharing from 'expo-sharing'
+import { Animated } from "react-native"
+import { useTranslation } from "react-i18next";
 
 export const useStoryFunctions = () => {
   const [genre, setGenre] = useState("")
@@ -18,11 +20,15 @@ export const useStoryFunctions = () => {
   const [errorMessage, setErrorMessage] = useState("")
   const [visible, setVisible] = useState(true)
   const [loading, setLoading] = useState(false)
-  const [historyFontSize, setHistoryFontSize] = useState(18)
+  const [historyFontSize, setHistoryFontSize] = useState(21)
   const [historyFontFamily, setHistoryFontFamily] = useState("")
   const [index, setIndex] = useState(0)
   const [dialogueCount, setDialogueCount] = useState("")
   const scrollRef = useRef<ScrollView>(null)
+  const shakeAnim = useRef(new Animated.Value(0)).current
+  const [languageButtonsVisibility, setLanguageButtonsVisibility] = useState(false)
+  const [dark, setDark] = useState(false);
+  const { i18n } = useTranslation();
 
   const [loaded] = useFonts({
     MedievalSharp: require('../../assets/fonts/MedievalSharp-Book.ttf'),
@@ -75,6 +81,7 @@ export const useStoryFunctions = () => {
   const removeCharacter = useCallback((id: string) => {
     if (characters.length === 1) {
       setErrorMessage("A história deve conter pelo menos um personagem.")
+      triggerErrorAnimation()
       return
     }
     setCharacters(prev => prev.filter(c => c.id !== id))
@@ -82,7 +89,9 @@ export const useStoryFunctions = () => {
 
   const addCharacter = useCallback(() => {
     if (characters.length >= 10) {
+      scrollRef.current?.scrollTo({ y: 0, animated: true })
       setErrorMessage("O número máximo de personagens é 10.")
+      triggerErrorAnimation()
       return
     }
     setCharacters(prev => [...prev, { id: Date.now().toString(), name: "", personality: "" }])
@@ -99,6 +108,7 @@ export const useStoryFunctions = () => {
       setVisible(true)
       scrollRef.current?.scrollTo({ y: 0, animated: true })
       setErrorMessage('Os campos gênero, duração e personagens devem ser preenchidos.')
+      triggerErrorAnimation()
       return
     }
 
@@ -116,7 +126,8 @@ export const useStoryFunctions = () => {
           characters,
           duration,
           includeDialogues,
-          dialogueCount
+          dialogueCount,
+          language: i18n.language
         }),
       })
 
@@ -138,14 +149,51 @@ export const useStoryFunctions = () => {
 
     } catch {
       setErrorMessage("Erro ao gerar história.")
+      triggerErrorAnimation()
     } finally {
       setLoading(false)
     }
   }, [genre, duration, characters, details, additionalDetails, includeDialogues, dialogueCount])
 
+  const triggerErrorAnimation = () => {
+    shakeAnim.setValue(0)
+
+    Animated.sequence([
+      Animated.timing(shakeAnim, {
+        toValue: 10,
+        duration: 50,
+        useNativeDriver: true
+      }),
+      Animated.timing(shakeAnim, {
+        toValue: -10,
+        duration: 50,
+        useNativeDriver: true
+      }),
+      Animated.timing(shakeAnim, {
+        toValue: 10,
+        duration: 50,
+        useNativeDriver: true
+      }),
+      Animated.timing(shakeAnim, {
+        toValue: 0,
+        duration: 50,
+        useNativeDriver: true
+      })
+    ]).start()
+  }
+
+  const changeLanguage = () => {
+    setLanguageButtonsVisibility(true)
+
+    if (languageButtonsVisibility === true) {
+      setLanguageButtonsVisibility(false)
+    }
+  }
+
   const saveStory = useCallback(async () => {
     if (!storyResult.trim()) {
       setErrorMessage("Não há história para salvar.")
+      triggerErrorAnimation()
       return
     }
 
@@ -193,6 +241,10 @@ export const useStoryFunctions = () => {
     addCharacter,
     scrollRef,
     changeFont,
-    saveStory
+    saveStory,
+    shakeAnim,
+    changeLanguage,
+    languageButtonsVisibility, setLanguageButtonsVisibility,
+    dark, setDark
   }
 }

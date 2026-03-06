@@ -1,5 +1,5 @@
 from flask import Flask, request, jsonify
-import google.generativeai as genai
+from google import genai
 import os
 from dotenv import load_dotenv
 
@@ -9,9 +9,7 @@ load_dotenv()
 
 api_key = os.getenv("GOOGLE_API_KEY")
 
-genai.configure(api_key=os.getenv("api_key"))
-
-model = genai.GenerativeModel("gemini-2.5-flash-lite")
+client = genai.Client()
 
 @app.route("/story", methods=["POST"])
 def story():
@@ -21,14 +19,22 @@ def story():
         characters = data.get("characters", [])
 
         formatted_characters = ""
+        
+        if data.get("language") == "Portugues_Brasil":
+            for char in characters:
+                formatted_characters += f"""
+            Nome: {char.get('name')}
+            Personalidade: {char.get('personality')}
+            """
+        else:
+            for char in characters:
+                formatted_characters += f"""
+            Name: {char.get('name')}
+            Personality: {char.get('personality')}
+            """
 
-        for char in characters:
-            formatted_characters += f"""
-        Nome: {char.get('name')}
-        Personalidade: {char.get('personality')}
-        """
-
-        prompt = f"""
+        if data.get("language") == "Portugues_Brasil":
+            prompt = f"""
             Crie uma história de tamanho {data.get("duration")} com base nas seguintes informações:
             Personagens e suas personalidades: 
             {formatted_characters}
@@ -36,13 +42,25 @@ def story():
             Incluir falas na história? {"Sim" if data.get("includeDialogues") else "Não"}
             {"Quantia de falas:" f" {data.get("dialogueCount")}" if data.get("includeDialogues") else ""}
             {"Informações adicionais:" f" {data.get("details")}" if data.get("details") else ""}
-            
+
             Apenas escreva a história, sem usar '###' para os capítulos.
             """
+        else:
+            prompt = f"""
+            Create a {data.get("duration")} length story based on the following information:
+            Characters and their personalities:
+            {formatted_characters}
+            Genre: {data.get("genre")}
+            Include dialogues in the story? {"Yes" if data.get("includeDialogues") else "No"}
+            {"Amount of dialogues:" f" {data.get('dialogueCount')}" if data.get("includeDialogues") else ""}
+            {"Additional information:" f" {data.get('details')}" if data.get("details") else ""}
 
-        response = model.generate_content(
-            prompt,
-            generation_config=genai.types.GenerationConfig(temperature=0.7)
+            Only write the story. Do not use '###' to separate chapters.
+            """
+
+        response = client.models.generate_content(
+            model="gemini-2.5-flash-lite",
+            contents=prompt
         )
 
         if response and response.parts:
@@ -50,12 +68,19 @@ def story():
                 "story": response.parts[0].text,
                 "success": True
             }), 200
-            
-        return jsonify({"error": "Model did not return any content."}), 500
+
+        # Caso response seja vazio
+        return jsonify({
+            "story": "No response from model",
+            "success": False
+        }), 500
 
     except Exception as e:
         print("ERROR:", e)
-        return jsonify({"error": str(e)}), 502
+        return jsonify({
+            "story": "An error occurred. Try again later.",
+            "success": False
+        }), 502
     
 @app.route("/ping")
 def ping():

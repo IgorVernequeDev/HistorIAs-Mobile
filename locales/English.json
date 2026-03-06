@@ -1,0 +1,52 @@
+{
+  "customize_story": "Customize your story",
+  "genre": "Genre",
+  "duration": "Duration",
+  "include_dialogues": "Include dialogues in the story?",
+  "dialogue_amount": "Amount of dialogues",
+  "add_additional_info": "Add additional information?",
+  "additional_info": "Additional information...",
+  "add_character": "Add Character",
+  "generate_story": "Generate Story",
+
+  "name": "Name",
+  "personality": "Personality",
+  "character": "Character",
+
+  "select_genre": "Select a genre...",
+  "select_duration": "Story duration...",
+  "select_dialogues": "Dialogue amount...", 
+  "select_name": "Character name...",
+  "select_personality": "Character personality...",
+  "select_amount_dialogue": "Amount...",
+
+  "very_short": "Very short",
+  "short": "Short",
+  "medium": "Medium",
+  "long": "Long",
+  "very_long": "Very long",
+
+  "few": "Few",
+  "many": "Many",
+
+  "romance": "Romance",
+  "science_fiction": "Science Fiction",
+  "fantasy": "Fantasy",
+  "mystery": "Mystery",
+  "horror": "Horror",
+  "adventure": "Adventure",
+  "comedy": "Comedy",
+  "drama": "Drama",
+  
+  "change_font": "Change font:",
+  "font_previous": "←",
+  "font_next": "→",
+  "size": "Size:",
+  "increase": "+",
+  "decrease": "-",
+  "generating_story": "Generating story...",
+  "save_story": "⬇️ Save story",
+  "max_characters": "Maximum number of characters is 10.",
+  "min_characters": "Story must contain at least one character.",
+  "no_story": "No story to save."
+}
