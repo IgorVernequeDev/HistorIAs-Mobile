@@ -15,10 +15,11 @@ O **HistorIAs Mobile** permite que o usuário crie histórias únicas escolhendo
 
 ## 🛠️ Tecnologias utilizadas
 
-* React Native
-* Expo
-* JavaScript / TypeScript
-* API de Inteligência Artificial
+![React Native](https://img.shields.io/badge/React%20Native-0.72-blue)
+![Expo](https://img.shields.io/badge/Expo-Mobile-black)
+![JavaScript](https://img.shields.io/badge/JavaScript-ES6-yellow)
+![TypeScript](https://img.shields.io/badge/TypeScript-4.x-blue)
+![Python](https://img.shields.io/badge/Python-3.x-green)
 
 ## 📦 Instalação
 
