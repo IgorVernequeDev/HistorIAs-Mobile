@@ -56,7 +56,7 @@ def story():
             {"Additional information:" f" {data.get('details')}" if data.get("details") else ""}
 
             Only write the story. Do not use '###' to separate chapters.
-            """
+            """  
 
         response = client.models.generate_content(
             model="gemini-2.5-flash-lite",
@@ -68,8 +68,7 @@ def story():
                 "story": response.parts[0].text,
                 "success": True
             }), 200
-
-        # Caso response seja vazio
+            
         return jsonify({
             "story": "No response from model",
             "success": False

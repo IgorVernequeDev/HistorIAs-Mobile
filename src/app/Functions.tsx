@@ -183,11 +183,18 @@ export const useStoryFunctions = () => {
   }
 
   const changeLanguage = () => {
-    setLanguageButtonsVisibility(true)
+    setLanguageButtonsVisibility(prev => !prev)
+  }
 
-    if (languageButtonsVisibility === true) {
-      setLanguageButtonsVisibility(false)
-    }
+  const resetForm = () => {
+    setGenre("")
+    setDuration("")
+    setDetails("")
+    setAdditionalDetails(false)
+    setIncludeDialogues(false)
+    setDialogueCount("")
+    setStoryResult("")
+    setCharacters([{ id: Date.now().toString(), name: "", personality: "" }])
   }
 
   const saveStory = useCallback(async () => {
@@ -245,6 +252,7 @@ export const useStoryFunctions = () => {
     shakeAnim,
     changeLanguage,
     languageButtonsVisibility, setLanguageButtonsVisibility,
-    dark, setDark
+    dark, setDark,
+    resetForm
   }
 }

@@ -9,8 +9,10 @@ import { useTranslation } from "react-i18next";
 const FormSection = (props: any) => {
   const {
     setGenre,
-    changeBackground,
+    genre,
+    duration,
     setDuration,
+    changeBackground,
     includeDialogues,
     setIncludeDialogues,
     setDialogueCount,
@@ -70,13 +72,14 @@ const FormSection = (props: any) => {
 
   return (
     <View style={styles.container}>
-      <View style={[styles.form, { backgroundColor: dark ? "#fff" : "#000" } ]}>
+      <View style={[styles.form, { backgroundColor: dark ? "#fff" : "#000" }]}>
 
-        <Text style={[styles.title, { color: dark ? "#000" : "#fff" } ]}>{t("customize_story")}</Text>
+        <Text style={[styles.title, { color: dark ? "#000" : "#fff" }]}>{t("customize_story")}</Text>
 
         <View style={{ flexDirection: 'row', alignItems: 'center', gap: 5 }}>
-          <Text style={[styles.label, { color: dark ? "#000" : "#fff" } ]}>{t("genre")}:</Text>
+          <Text style={[styles.label, { color: dark ? "#000" : "#fff" }]}>{t("genre")}:</Text>
           <RNPickerSelect
+          value={genre}
             onValueChange={(value) => {
               setGenre(value)
               changeBackground(value)
@@ -101,8 +104,9 @@ const FormSection = (props: any) => {
         </View>
 
         <View style={{ flexDirection: 'row', alignItems: 'center', gap: 5 }}>
-          <Text style={[styles.label, { color: dark ? "#000" : "#fff" } ]}>{t("duration")}:</Text>
+          <Text style={[styles.label, { color: dark ? "#000" : "#fff" }]}>{t("duration")}:</Text>
           <RNPickerSelect
+          value={duration}
             onValueChange={setDuration}
             items={DURATIONS}
             placeholder={{ label: t("select_duration"), value: null }}
@@ -125,7 +129,7 @@ const FormSection = (props: any) => {
         </View>
 
         <View style={{ flexDirection: 'row', alignItems: 'center', gap: 10, marginBottom: 10, marginTop: 5 }}>
-          <Text style={[styles.label, { color: dark ? "#000" : "#fff" } ]}>{t("include_dialogues")}</Text>
+          <Text style={[styles.label, { color: dark ? "#000" : "#fff" }]}>{t("include_dialogues")}</Text>
           <Checkbox
             style={{ width: 22, height: 22 }}
             value={includeDialogues}
@@ -136,7 +140,7 @@ const FormSection = (props: any) => {
 
         {includeDialogues && (
           <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-            <Text style={[styles.label, { color: dark ? "#000" : "#fff" } ]}>{t("dialogue_amount")}:</Text>
+            <Text style={[styles.label, { color: dark ? "#000" : "#fff" }]}>{t("dialogue_amount")}:</Text>
             <RNPickerSelect
               onValueChange={setDialogueCount}
               items={DIALOGUES}
@@ -163,7 +167,7 @@ const FormSection = (props: any) => {
         {characterList}
 
         <View style={{ flexDirection: 'row', alignItems: 'center', gap: 10, marginVertical: 10 }}>
-          <Text style={[styles.label, { color: dark ? "#000" : "#fff" } ]}>{t("additional_info")}</Text>
+          <Text style={[styles.label, { color: dark ? "#000" : "#fff" }]}>{t("additional_info")}</Text>
           <Checkbox
             style={{ width: 22, height: 22 }}
             value={additionalDetails}
@@ -179,16 +183,18 @@ const FormSection = (props: any) => {
             placeholderTextColor={dark ? "#aaa" : "#666"}
             value={details}
             onChangeText={setDetails}
+            multiline={true}
+            numberOfLines={4}
           />
         )}
 
         <View style={{ flexDirection: 'row', justifyContent: 'space-between', gap: 10 }}>
           <TouchableOpacity style={[styles.button, { backgroundColor: dark ? "#000" : "#fff" }]} onPress={addCharacter}>
-            <Text style={[styles.buttonText, { color: dark ? "#fff" : "#000" } ]}>{t("add_character")}</Text>
+            <Text style={[styles.buttonText, { color: dark ? "#fff" : "#000" }]}>{t("add_character")}</Text>
           </TouchableOpacity>
 
           <TouchableOpacity style={[styles.button, { backgroundColor: dark ? "#000" : "#fff" }]} onPress={story}>
-            <Text style={[styles.buttonText, { color: dark ? "#fff" : "#000" } ]}>{t("generate_story")}</Text>
+            <Text style={[styles.buttonText, { color: dark ? "#fff" : "#000" }]}>{t("generate_story")}</Text>
           </TouchableOpacity>
         </View>
 

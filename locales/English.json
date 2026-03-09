@@ -39,11 +39,7 @@
   "drama": "Drama",
   
   "change_font": "Change font:",
-  "font_previous": "←",
-  "font_next": "→",
   "size": "Size:",
-  "increase": "+",
-  "decrease": "-",
   "generating_story": "Generating story...",
   "save_story": "⬇️ Save story",
   "max_characters": "Maximum number of characters is 10.",

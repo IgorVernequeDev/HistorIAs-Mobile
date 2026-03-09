@@ -23,20 +23,23 @@ export default function App() {
     changeLanguage,
     languageButtonsVisibility, setLanguageButtonsVisibility,
     dark, setDark,
+    resetForm,
     ...props
   } = useStoryFunctions()
 
   const { t, i18n } = useTranslation();
 
   const changeToPT = () => {
-    i18n.changeLanguage("Portugues_Brasil");
+    resetForm()
+    i18n.changeLanguage("Portugues_Brasil")
     setLanguageButtonsVisibility(false)
-  };
+  }
 
   const changeToEN = () => {
-    i18n.changeLanguage("English");
+    resetForm()
+    i18n.changeLanguage("English")
     setLanguageButtonsVisibility(false)
-  };
+  }
 
   return (
     <ImageBackground source={backgroundImage} style={styles.background} resizeMode="cover">
