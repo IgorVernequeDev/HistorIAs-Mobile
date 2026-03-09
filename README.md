@@ -54,13 +54,9 @@ Depois disso você pode abrir no:
 
 ## 🎯 Objetivo do projeto
 
-Este projeto foi desenvolvido com o objetivo de explorar:
-
 * Desenvolvimento mobile com React Native
 * Integração de Inteligência Artificial em aplicativos
 * Criação de experiências interativas de storytelling
-
-Também serve como projeto de estudo e portfólio.
 
 ## 👨‍💻 Autor
 
