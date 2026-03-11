@@ -1,7 +1,5 @@
 # 📖 HistorIAs Mobile
 
-Aplicativo mobile que gera histórias automaticamente usando Inteligência Artificial.
-
 O **HistorIAs Mobile** permite que o usuário crie histórias únicas escolhendo elementos como personagens, personalidade e gênero da narrativa. A partir dessas informações, a aplicação utiliza IA para gerar uma história completa.
 
 ## 🚀 Funcionalidades
